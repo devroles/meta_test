@@ -1,0 +1,22 @@
+name: Determine the install path
+description: |-
+  Determines the correct install path for an Ansible collection by querying its
+  galaxy.yml file.
+outputs:
+  path:
+    description: Path to the collection
+    value: ${{ steps.path.outputs.path }}
+runs:
+  using: composite
+  steps:
+    - name: Fetch path and move contents to that location
+      id: path
+      shell: bash
+      run: |
+        set -ex -o pipefail
+        namespace=$(grep galaxy.yml -e 'namespace:' | cut -f2 -d' ')
+        collection=$(grep galaxy.yml -e '^name:' | cut -f2 -d' ')
+        path="$(pwd)/ansible_collections/${namespace}/${collection}"
+        mkdir -p "${path}"
+        mv $(ls -A | grep -v ansible_collections) "${path}"
+        echo "::set-output name=path::${path}"
