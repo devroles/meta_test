@@ -9,10 +9,6 @@ provisioner:
     prepare: ../shared/prepare.yml
     converge: ../shared/playbook.yml
     cleanup: ../shared/cleanup.yml
-    openstack:
-      cleanup: ../../../../tests/cleanup-openstack.yml
-      create: ../../../../tests/create-openstack.yml
-      destroy: ../../../../tests/destroy-openstack.yml
   config_options:
     defaults:
       stdout_callback: yaml
