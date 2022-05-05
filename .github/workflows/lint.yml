@@ -14,7 +14,7 @@ jobs:
         uses: actions/setup-python@v2
       - name: Update git
         run: |
-          git config pull.rebase true
+          git config --global pull.rebase true
           git submodule foreach --recursive git pull
       - name: Do install path
         uses: ./tests/.github/actions/install_path/
