@@ -9,7 +9,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          submodules: true
+          submodules: 'recursive'
+          depth: 0
       - name: Set up Python
         uses: actions/setup-python@v2
       - name: Update git
