@@ -15,13 +15,11 @@ jobs:
       matrix:
         scenario: ${{ fromJson(inputs.scenarios) }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: 'recursive'
       - name: Set up Python
         uses: actions/setup-python@v2
-      - name: Update submodules to latest
-        run: git submodule update --remote --recursive
       - name: Do install path
         uses: ./tests/.github/actions/install_path/
         id: path
