@@ -13,11 +13,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           repository: devroles/meta_test
-          path: ${{ env.HOME }}/myself
+          path: ~/myself
       - name: Set up Python
         uses: actions/setup-python@v2
       - name: Do install path
-        uses: ${{ env.HOME }}/myself/.github/actions/install_path/
+        uses: ~/myself/.github/actions/install_path/
         id: path
       - name: Install dependencies
         run: python -m pip install --upgrade tox
