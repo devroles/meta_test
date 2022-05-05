@@ -10,7 +10,7 @@ jobs:
       scenarios: ${{ steps.collection.outputs.tox-envs }}
       vagrant_scenarios: ${{ steps.vagrant.outputs.tox-envs }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: 'recursive'
       - name: Set up Python
