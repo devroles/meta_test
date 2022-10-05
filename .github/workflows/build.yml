@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
       - name: Install Python
         uses: actions/setup-python@v3
         with:
@@ -40,3 +42,6 @@ jobs:
           set -ex
           TOX="$(which tox)"
           "${TOX}" -e "${{ matrix.scenarios.scenario }}" -- --destroy=never
+
+  lint:
+    uses: devroles/meta_test/.github/workflows/lint.yml@master
