@@ -1,0 +1,44 @@
+name: "Build Ansible scenarios"
+
+"on":
+  workflow_call:
+    inputs:
+      scenarios:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Ansible tests
+    runs-on: ${{ matrix.scenarios.os }}
+    needs:
+      - collect
+    strategy:
+      fail-fast: false
+      matrix:
+        scenarios: "${{ fromJson(inputs.scenarios) }}"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Setup pip cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip
+      - name: Install pip, tox, and Ansible
+        shell: bash
+        run: |
+          set -exo pipefail
+          python3 -m pip install -U pip
+          pip install -U wheel
+          pip install -U tox
+          pip install -U ansible
+      - name: Run scenario
+        run: |
+          set -ex
+          TOX="$(which tox)"
+          "${TOX}" -e "${{ matrix.scenarios.scenario }}" -- --destroy=never
