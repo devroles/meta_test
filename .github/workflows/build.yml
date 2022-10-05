@@ -2,19 +2,57 @@ name: "Build Ansible scenarios"
 
 "on":
   workflow_call:
-    inputs:
-      scenarios:
-        required: true
-        type: string
 
 jobs:
+  collect:
+    runs-on: ubuntu-latest
+    outputs:
+      scenarios: ${{ steps.zipped.outputs.scenarios }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          set -ex
+          python -m pip install --upgrade tox
+      - name: Collect container tests
+        id: collection
+        uses: greg-hellings/tox-list@v1
+        with:
+          tox-args: --ansible-driver docker --ansible-driver podman --ansible-driver containers
+      - name: Collect VM tests
+        id: vagrant
+        uses: greg-hellings/tox-list@v1
+        with:
+          tox-args: --ansible-driver vagrant
+      - id: zipped
+        name: Zip arrays together
+        shell: python
+        run: |
+          import json
+          ubuntu = json.loads('${{ steps.collection.outputs.tox-envs }}')
+          macos  = json.loads('${{ steps.vagrant.outputs.tox-envs }}')
+          ub_zip = [{'os': 'ubuntu-latest', 'scenario': u} for u in ubuntu]
+          mac_zip = [{'os': 'macos-10.15', 'scenario': m} for m in macos]
+          print("::set-output name=scenarios::" + json.dumps(ub_zip + mac_zip))
+
+  lint:
+    uses: devroles/meta_test/.github/workflows/lint.yml@master
+
   build:
     name: Ansible tests
     runs-on: ${{ matrix.scenarios.os }}
+    needs:
+      - collect
     strategy:
       fail-fast: false
       matrix:
-        scenarios: "${{ fromJson(inputs.scenarios) }}"
+        scenarios: "${{ fromJson(needs.collect.outputs.scenarios) }}"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -37,11 +75,12 @@ jobs:
           pip install -U wheel
           pip install -U tox
           pip install -U ansible
+      - name: Do install path
+        uses: ./tests/.github/actions/install_path/
+        id: path
       - name: Run scenario
         run: |
           set -ex
+          cd "${{ steps.path.outputs.path }}"
           TOX="$(which tox)"
           "${TOX}" -e "${{ matrix.scenarios.scenario }}" -- --destroy=never
-
-  lint:
-    uses: devroles/meta_test/.github/workflows/lint.yml@master
