@@ -11,8 +11,6 @@ jobs:
   build:
     name: Ansible tests
     runs-on: ${{ matrix.scenarios.os }}
-    needs:
-      - collect
     strategy:
       fail-fast: false
       matrix:
