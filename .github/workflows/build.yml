@@ -78,7 +78,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/ansible-compat
-          key: ${{ runner.os }}-ansible-compat-${{ hashFiles("requirements.yml", "galaxy.yml") }}
+          key: ${{ runner.os }}-ansible-compat-${{ hashFiles('requirements.yml', 'galaxy.yml') }}
           restore-keys:
             - ${{ runner.os }}-ansible-compat-
       - name: Install pip, tox, and Ansible
