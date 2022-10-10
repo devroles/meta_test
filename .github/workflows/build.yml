@@ -71,12 +71,16 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.vagrant.d
-          key: ${{ runner.os }}-vagrant
+          key: ${{ runner.os }}-vagrant-${{ matrix.scenarios.scenario }}
+          restore-keys:
+            - ${{ runner.os }}-vagrant-
       - name: Setup ansible-compat cache
         uses: actions/cache@v3
         with:
           path: ~/.cache/ansible-compat
-          key: ${{ runner.os }}-ansible-compat
+          key: ${{ runner.os }}-ansible-compat-${{ hashFiles("requirements.yml", "galaxy.yml") }}
+          restore-keys:
+            - ${{ runner.os }}-ansible-compat-
       - name: Install pip, tox, and Ansible
         shell: bash
         run: |
