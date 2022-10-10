@@ -78,6 +78,7 @@ jobs:
           path: ~/.vagrant.d
           key: ${{ runner.os }}-vagrant-${{ steps.scenario-name.outputs.scenario }}
           restore-keys: |
+            ${{ runner.os }}-vagrant-${{ matrix.scenarios.scenario }}
             ${{ runner.os }}-vagrant-
       - name: Setup ansible-compat cache
         uses: actions/cache@v3
