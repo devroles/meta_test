@@ -67,6 +67,16 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip
+      - name: Setup vagrant cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.vagrant.d
+          key: ${{ runner.os }}-vagrant
+      - name: Setup ansible-compat cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ansible-compat
+          key: ${{ runner.os }}-ansible-compat
       - name: Install pip, tox, and Ansible
         shell: bash
         run: |
