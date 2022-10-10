@@ -62,6 +62,11 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: "3.10"
+      - name: Find scenario name
+        id: scenario-name
+        env:
+          SCENARIO: ${{ matrix.scenarios.scenario }}
+        run: echo "::set-output name=scenario::${SCENARIO##*-}"
       - name: Setup pip cache
         uses: actions/cache@v3
         with:
@@ -71,7 +76,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.vagrant.d
-          key: ${{ runner.os }}-vagrant-${{ matrix.scenarios.scenario }}
+          key: ${{ runner.os }}-vagrant-${{ steps.scenario-name.outputs.scenario }}
           restore-keys: |
             ${{ runner.os }}-vagrant-
       - name: Setup ansible-compat cache
