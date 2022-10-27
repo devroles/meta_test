@@ -15,7 +15,9 @@ jobs:
           repository: devroles/meta_test
           path: .meta_test
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
+        with:
+          cache: pip
       - name: Do install path
         uses: ./.meta_test/.github/actions/install_path/
         id: path
