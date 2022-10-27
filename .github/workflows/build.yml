@@ -44,7 +44,7 @@ jobs:
             output.write("scenarios=" + json.dumps(ub_zip + mac_zip) + "\n")
 
   lint:
-    uses: devroles/meta_test/.github/workflows/lint.yml@master
+    uses: devroles/meta_test/.github/workflows/lint.yml@main
 
   build:
     name: Ansible tests
