@@ -71,11 +71,6 @@ jobs:
         env:
           SCENARIO: ${{ matrix.scenarios.scenario }}
         run: echo "scenario=${SCENARIO##*-}"
-      - name: Setup pip cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip
       - name: Setup vagrant cache
         uses: actions/cache@v3
         with:

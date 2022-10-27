@@ -10,10 +10,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: 'recursive'
-      - uses: actions/checkout@v3
-        with:
-          repository: devroles/meta_test
-          path: .meta_test
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
