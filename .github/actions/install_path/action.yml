@@ -19,4 +19,4 @@ runs:
         path="$(pwd)/ansible_collections/${namespace}/${collection}"
         mkdir -p "${path}"
         mv $(ls -A | grep -v ansible_collections) "${path}"
-        echo "::set-output name=path::${path}"
+        echo "path=${path}" >> $GITHUB_OUTPUT

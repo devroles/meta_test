@@ -35,11 +35,13 @@ jobs:
         shell: python
         run: |
           import json
+          import os
           ubuntu = json.loads('${{ steps.collection.outputs.tox-envs }}')
           macos  = json.loads('${{ steps.vagrant.outputs.tox-envs }}')
           ub_zip = [{'os': 'ubuntu-22.04', 'scenario': u} for u in ubuntu]
           mac_zip = [{'os': 'macos-12', 'scenario': m} for m in macos]
-          print("::set-output name=scenarios::" + json.dumps(ub_zip + mac_zip))
+          with open(os.getenv('GITHUB_OUTPUT'), 'a') as output:
+            output.write("scenarios=" + json.dumps(ub_zip + mac_zip) + "\n")
 
   lint:
     uses: devroles/meta_test/.github/workflows/lint.yml@master
@@ -66,7 +68,7 @@ jobs:
         id: scenario-name
         env:
           SCENARIO: ${{ matrix.scenarios.scenario }}
-        run: echo "::set-output name=scenario::${SCENARIO##*-}"
+        run: echo "scenario=${SCENARIO##*-}"
       - name: Setup pip cache
         uses: actions/cache@v3
         with:
